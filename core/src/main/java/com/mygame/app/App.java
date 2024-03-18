@@ -1,38 +1,28 @@
 package com.mygame.app;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygame.tools.ScreeApplicationAdapter;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class App extends ApplicationAdapter {
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private Texture image;
-
+public class App extends ScreeApplicationAdapter{
+    
+	private MainGame game;
+	
+	public App(MainGame game) {
+		this.game = game;
+	}
+	
     @Override
-    public void create() {
-        batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
-        this.font = new BitmapFont();
+    public void show() {
+        
     }
 
     @Override
-    public void render() {
-        Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        font.draw(batch, "Hola mundo", 180, 200);
-        batch.draw(image, 140, 210);
-        batch.end();
+    public void render(float delta) {
+        super.render(delta);
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        image.dispose();
+    	
     }
 }
