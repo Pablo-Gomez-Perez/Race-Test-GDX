@@ -2,6 +2,7 @@ package com.mygame.app.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.Texture;
 import com.mygame.app.App;
 import com.mygame.app.MainGame;
 
@@ -16,7 +17,7 @@ public class Lwjgl3Launcher {
         return new Lwjgl3Application(new MainGame(), getDefaultConfiguration());
     }
 
-    private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
+    private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {    	
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("myGame");
         configuration.useVsync(true);

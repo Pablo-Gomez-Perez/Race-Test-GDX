@@ -2,6 +2,7 @@ package com.mygame.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -18,12 +19,15 @@ public class App extends ScreeApplicationAdapter{
 	private MainGame game;
 	private Auto carUser;
 	private Auto carPC;
+	//private int countDown = 3;
+	//private boolean isCountDownInProgress = true;
 	private SpriteBatch batch;
-	private boolean isGameInProgress = true;
+	private boolean isGameInProgress = false;
 	private String winnerMessage = "";
 	private BitmapFont font;
 	private final float FINISH_LINE = 800.0f;
 	private final float START_LINE = 100.0f;
+	private Music backgroundMusic;
 	
 	public App(MainGame game) {
 		this.game = game;
@@ -62,10 +66,14 @@ public class App extends ScreeApplicationAdapter{
 	
     @Override
     public void show() {
-        super.show();
-        this.backGround = new Texture("fondo_carretera.png");
+        super.show();                
         this.batch = new SpriteBatch();        
         this.font = new BitmapFont();
+        this.backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("SuperBombermanBossmusic.ogg"));
+        this.backGround = new Texture("fondo_carretera.png");
+    	this.backgroundMusic.setLooping(true);
+        this.backgroundMusic.play();
+        this.backgroundMusic.setVolume(0.75f);
         this.buildUserCar();
         this.buildPcCar();
     }
@@ -81,23 +89,59 @@ public class App extends ScreeApplicationAdapter{
         this.carUser.render(batch);
         this.carPC.render(batch);
         
+        //this.coutDown(batch);
+        
+        /*while(isCountDownInProgress) {
+    		try {
+    			font.draw(batch, String.valueOf((int) Math.ceil(countDown)), Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+    			Thread.sleep(1000);
+    			countDown --;
+    			
+    			if(countDown <= 0)
+    				isCountDownInProgress = false;
+    				this.isGameInProgress = true;
+    		}catch(Exception er) {
+    			er.printStackTrace();
+    		}
+    	}*/
+        
+        /*if(isCountDownInProgress) {
+        	this.countDown -= delta;
+        	font.draw(batch, String.valueOf((int) Math.ceil(countDown)), Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);        	
+        	this.isCountDownInProgress = this.countDown <= 0 ? false : true;        	
+        }*/
+        
         if (!isGameInProgress) {
+        	/*countDown -= delta;
+        	if(countDown > 0) {
+        		font.draw(batch, String.valueOf((int) Math.ceil(countDown)), Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+        	}else {
+        		this.isGameInProgress = true;
+        	}*/
         	font.getData().setScale(2f);
             font.draw(batch, winnerMessage, (Gdx.graphics.getWidth() / 2f) - 80f, Gdx.graphics.getHeight() - 30f);
             font.draw(batch, "Press 'R' to restart", (Gdx.graphics.getWidth() / 2f) - 80f, Gdx.graphics.getHeight() - 60f);
             
             if(Gdx.input.isKeyJustPressed(Input.Keys.R))
             	this.restartGame();
-        }
+        }//else {
+        	//this.carUser.render(batch);
+            //this.carPC.render(batch);
+            //handleComputerCarMovement(delta);
+            //checkFinishLine();
+        //}
         
         batch.end();
 
         if (isGameInProgress) {            
             handleComputerCarMovement(delta);
-            checkFinishLine();
+            checkFinishLine();         
         }
         
         handleUserInput(delta);
+        
+        //Gdx.app.log("Game", this.backgroundMusic.isPlaying() + "");
+        
         
         /*if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && (this.carUser.getAutoSprite().getX() < this.FINISH_LINE)) {
             this.carUser.move(delta, false);
@@ -116,8 +160,26 @@ public class App extends ScreeApplicationAdapter{
     	this.carPC.getAutoSprite().getTexture().dispose();
     	this.carUser.getAutoSprite().getTexture().dispose();
     	this.backGround.dispose();
+    	this.backgroundMusic.stop();
+    	this.backgroundMusic.dispose();
     	this.batch.dispose();
     }
+    
+//    private void coutDown(SpriteBatch batch) {
+//    	while(isCountDownInProgress) {
+//    		try {
+//    			font.draw(batch, String.valueOf((int) Math.ceil(countDown)), Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+//    			Thread.sleep(1000);
+//    			countDown --;
+//    			
+//    			if(countDown <= 0)
+//    				isCountDownInProgress = false;
+//    				this.isGameInProgress = true;
+//    		}catch(Exception er) {
+//    			er.printStackTrace();
+//    		}
+//    	}
+//    }
     
     private void handleUserInput(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && carUser.getAutoSprite().getX() /*+ carUser.getAutoSprite().getWidth()*/ < FINISH_LINE) {
@@ -140,6 +202,8 @@ public class App extends ScreeApplicationAdapter{
         buildPcCar();
         isGameInProgress = true;
         winnerMessage = "";
+        this.countDown = 3;
+        //this.isCountDownInProgress = true;
     }
     
     private void checkFinishLine() {
