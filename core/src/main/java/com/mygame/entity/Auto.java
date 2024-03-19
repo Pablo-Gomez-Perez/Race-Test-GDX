@@ -1,23 +1,25 @@
 package com.mygame.entity;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Auto {
-	private Texture autoImage;
+	//private Texture autoImage;
+	private Sprite autoSprite;
 	private Vector2 position;
 	float velocity;
 	
 	public static class Builder{
 		private Auto auto;
 		
-		public Builder(Texture image) {
-			this.auto = new Auto(image);
+		public Builder(Texture sprite) {
+			this.auto = new Auto(new Sprite(sprite));
 		}
 		
 		public Builder position(Vector2 position) {
-			this.auto.setPosition(position);
+			this.auto.autoSprite.setPosition(position.x,position.y);
 			return this;
 		}
 		
@@ -26,13 +28,18 @@ public class Auto {
 			return this;
 		}
 		
+		public Builder sisze(float width, float height) {
+			this.auto.autoSprite.setSize(width, height);
+			return this;
+		}
+		
 		public Auto build() {
 			return this.auto;
 		}
 	}
 	
-	public static Builder builder(Texture image) {
-		return new Builder(image);
+	public static Builder builder(Texture sprite) {
+		return new Builder(sprite);
 	}
 	
 	/**
@@ -40,33 +47,34 @@ public class Auto {
 	 * @param position
 	 * @param velocity
 	 */
-	public Auto(Texture autoImage, Vector2 position, float velocity) {
+	public Auto(Sprite autoSprite, Vector2 position, float velocity) {
 		super();
-		this.autoImage = autoImage;
+		this.autoSprite = autoSprite;
 		this.position = position;
 		this.velocity = velocity;
 	}
 
-	public Auto(Texture autoImage) {
-		this.autoImage = autoImage;
+	public Auto(Sprite sprite) {
+		//this.autoImage = autoImage;
+		this.autoSprite = sprite;
 	}
 	
 	public Auto() {
 		
-	}
-	
+	}	
+
 	/**
-	 * @return the autoImage
+	 * @return the autoSprite
 	 */
-	public Texture getAutoImage() {
-		return autoImage;
+	public Sprite getAutoSprite() {
+		return autoSprite;
 	}
 
 	/**
-	 * @param autoImage the autoImage to set
+	 * @param autoSprite the autoSprite to set
 	 */
-	public void setAutoImage(Texture autoImage) {
-		this.autoImage = autoImage;
+	public void setAutoSprite(Sprite autoSprite) {
+		this.autoSprite = autoSprite;
 	}
 
 	/**
@@ -97,18 +105,19 @@ public class Auto {
 		this.velocity = velocity;
 	}
 
-	@Override
-	public String toString() {
-		return "Auto [autoImage=" + autoImage + ", position=" + position + ", velocity=" + velocity + "]";
-	}
+	
 	
 	public void move(float delta, boolean toLeft) {
-		float movement = toLeft == true ? -this.velocity * delta : this.velocity * delta;
-	    this.position.x += movement;
+		float movement = toLeft == true ? -this.velocity : this.velocity;
+	    this.autoSprite.translateX(movement * delta);
+
 	}
 	
 	public void render(SpriteBatch batch) {
-		batch.draw(autoImage, this.position.x, this.position.y);
+		this.autoSprite.draw(batch);
 	}
 	
+	public void setSize(float width, float height) {
+        this.autoSprite.setSize(width, height);
+    }
 }
